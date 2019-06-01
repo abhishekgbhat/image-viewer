@@ -1,15 +1,26 @@
-.dispNone {
-    display:none;
+.cardStyle {
+    width: 330px;
+    padding: 24px 24px 24px 24px;
+    margin: auto;
+    text-align: left;
+    margin-top: 32px;
+}
+.cardTitle{
+    font-size: 14px;
+    font-weight: 600;
+}
+.formControl{
+    width: 100%;
 }
 
-.dispBlock {
+.dispNone{
+    display: none;
+}
+
+.dispBlock{
     display: block;
 }
 
-.red {
+.red{
     color: red;
-}
-.main-container{
-  display: flex;
-  flex-direction: column;
 }
