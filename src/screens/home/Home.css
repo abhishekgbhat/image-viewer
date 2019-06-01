@@ -1,0 +1,15 @@
+.tags{
+    color: blue;
+}
+.redColor{
+    color: red;
+    cursor: pointer;
+}
+.greyColor{
+    color: grey;
+    cursor: pointer;
+}
+
+.postcard{
+    max-width: 100%;
+}
