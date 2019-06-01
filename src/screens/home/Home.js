@@ -51,7 +51,11 @@ class Home extends Component {
         }
         });
         xhrUserProfile.open("GET", this.props.baseUrl + "users/self/?access_token=" + this.state.access_token);
-        xhrUserProfile.setRequestHeader("Cache-Control", "no-cache");
+
+        // Bug Fix - We dont need to set Cache-Control & Access-Control-Allow-Origin
+        // Refer - https://learn.upgrad.com/v/course/167/question/129054
+        //xhrUserProfile.setRequestHeader("Cache-Control", "no-cache");
+        //xhrUserProfile.setRequestHeader("Access-Control-Allow-Origin", "*");
         xhrUserProfile.send(dataUserProfile);
 
         // Get user posts
@@ -67,7 +71,10 @@ class Home extends Component {
             }
         });
         xhrUserPosts.open("GET", this.props.baseUrl + "users/self/media/recent?access_token=" + this.state.access_token);
-        xhrUserPosts.setRequestHeader("Cache-Control", "no-cache");
+        // Bug Fix - We dont need to set Cache-Control & Access-Control-Allow-Origin
+        // Refer - https://learn.upgrad.com/v/course/167/question/129054
+        //xhrUserPosts.setRequestHeader("Cache-Control", "no-cache");
+        //xhrUserPosts.setRequestHeader("Access-Control-Allow-Origin", "*");
         xhrUserPosts.send(dataUserPosts);
 
     }
