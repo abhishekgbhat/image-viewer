@@ -14,12 +14,12 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import CardMedia from '@material-ui/core/CardMedia';
+//import CardMedia from '@material-ui/core/CardMedia';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
-import FavoriteIconFill from '@material-ui/icons/Favorite';
+//import IconButton from '@material-ui/core/IconButton';
+//import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
+//import FavoriteIconFill from '@material-ui/icons/Favorite';
 
 
 const styles = {
@@ -192,8 +192,28 @@ class Profile extends Component {
                                 </Button>
                             </div>
                         </Modal>
+                    
                     </span>
+                    </div>
+                <div className="media-posts-grid">
+                    {this.state.mediaData != null &&
+                        <GridList cellHeight={'auto'} cols={3} style={{ padding: "40px" }}>
+                            {this.state.mediaData.map(item => (
+                                <GridListTile key={item.id}>
+                                    <CardMedia
+                                        id={item.id}
+                                        style={styles.media}
+                                        image={item.images.standard_resolution.url}
+                                        title={item.caption.text}
+                                        onClick={this.handleOpenImageModal}
+                                    />
+                                </GridListTile>
+                            ))}
+                        </GridList>}
                 </div>
+                
+                
+            
             </div>
         )
     }

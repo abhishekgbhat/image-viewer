@@ -12,14 +12,15 @@
 }
 
 .gridList{
-    width: 100px;
-    height: 400px;
+    width:  750px;
+    height: 500px;
 }
 
 .root{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    margin-top:10px;
     overflow: hidden;
 }
 
