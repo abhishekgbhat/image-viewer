@@ -1,0 +1,12 @@
+.information-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center
+}

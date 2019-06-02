@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Home from './home/Home';
 import Login from './login/Login';
+import Profile from './profile/Profile';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import  PrivateRoute  from '../common/PrivateRoute';
 
@@ -26,6 +27,12 @@ class Controller extends Component {
                   exact 
                   path='/home'
                   component={Home} 
+                  baseUrl = {this.baseUrl}
+                    /> 
+              <PrivateRoute 
+                  exact 
+                  path='/profile'
+                  component={Profile} 
                   baseUrl = {this.baseUrl}
                   /> 
             </Switch>
