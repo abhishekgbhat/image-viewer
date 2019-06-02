@@ -10,3 +10,16 @@
     justify-content: flex-start;
     align-items: center
 }
+
+.gridList{
+    width: 100px;
+    height: 400px;
+}
+
+.root{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    overflow: hidden;
+}
+
