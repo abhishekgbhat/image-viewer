@@ -11,12 +11,13 @@
     align-items: center;
 }
 
-.image-posts-information{
-   display: flex;
-   flex-direction: row;
-   background-color: #fff;
-   width: 70%; 
-   height: 70%;
+.image-posts-information {
+    display: flex;
+    flex-direction: row;
+    background-color: #fff;
+    width: 70%;
+    height: 70%;
+    
 }
 
 .image-modal-right {
