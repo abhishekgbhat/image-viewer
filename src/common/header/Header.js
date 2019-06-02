@@ -11,6 +11,7 @@ import Search from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 
+//Menu Item on the right of the header.
 const StyledMenu = withStyles({
     paper: {
       border: '1px solid #d3d4d5',
@@ -34,7 +35,7 @@ const StyledMenu = withStyles({
     />
   ));
 
-
+//Menu Item on click of profile picture in the header.
  const StyledMenuItem = withStyles(theme => ({
     root: {
       padding: 4,
@@ -60,7 +61,8 @@ class Header extends Component {
             searchText: ''
         };
     }
-
+    
+    //Click on headers based on page handlers.
     handleClick = (event) => {
         this.setState({ anchorEl: event.currentTarget });
     }

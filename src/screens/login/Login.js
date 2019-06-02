@@ -30,6 +30,7 @@ class Login extends Component {
         };
     }
 
+    //Login in click handlers to authenticate and display error accordingly.
     loginClickHandler = () => {
         this.state.username === '' ? this.setState({ usernameRequired: 'dispBlock' }) : this.setState({ usernameRequired: 'dispNone' });
         this.state.password === "" ? this.setState({ passwordRequired: 'dispBlock' }) : this.setState({ passwordRequired: 'dispNone' });
@@ -55,14 +56,17 @@ class Login extends Component {
         }
     }
 
+    //Redirect on to home page on successful authentication.
     redirectToHome = () => {
         this.props.history.push("/home");
     }
-
+    
+    // Set USERNAME on input.
     inputUserNameChangeHandler = (e) => {
         this.setState({ username: e.target.value });
     }
-
+    
+    // Set PASSWORD on input.
     inputPasswordChangeHandler = (e) => {
         this.setState({ password: e.target.value });
     }
