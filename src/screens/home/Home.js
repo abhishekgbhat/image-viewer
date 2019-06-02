@@ -6,11 +6,16 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
+import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
 import * as moment from 'moment';
 
 class Home extends Component {
@@ -51,11 +56,7 @@ class Home extends Component {
         }
         });
         xhrUserProfile.open("GET", this.props.baseUrl + "users/self/?access_token=" + this.state.access_token);
-
-        // Bug Fix - We dont need to set Cache-Control & Access-Control-Allow-Origin
-        // Refer - https://learn.upgrad.com/v/course/167/question/129054
         //xhrUserProfile.setRequestHeader("Cache-Control", "no-cache");
-        //xhrUserProfile.setRequestHeader("Access-Control-Allow-Origin", "*");
         xhrUserProfile.send(dataUserProfile);
 
         // Get user posts
@@ -71,10 +72,7 @@ class Home extends Component {
             }
         });
         xhrUserPosts.open("GET", this.props.baseUrl + "users/self/media/recent?access_token=" + this.state.access_token);
-        // Bug Fix - We dont need to set Cache-Control & Access-Control-Allow-Origin
-        // Refer - https://learn.upgrad.com/v/course/167/question/129054
         //xhrUserPosts.setRequestHeader("Cache-Control", "no-cache");
-        //xhrUserPosts.setRequestHeader("Access-Control-Allow-Origin", "*");
         xhrUserPosts.send(dataUserPosts);
 
     }
@@ -104,10 +102,10 @@ class Home extends Component {
             if(_filteredPosts !== null && _filteredPosts.length > 0) {
                 if(_filteredPosts[_index].user_has_liked ) {
                     _filteredPosts[_index].user_has_liked = false;
-                    _filteredPosts[_index].likes.count = (_filteredPosts[_index].likes.count) - 1;
+                    _filteredPosts[_index].likes.count = (_filteredPosts[_index].likes.count) + 1;
                 } else {
                     _filteredPosts[_index].user_has_liked = true;
-                    _filteredPosts[_index].likes.count = (_filteredPosts[_index].likes.count) + 1;
+                    _filteredPosts[_index].likes.count = (_filteredPosts[_index].likes.count) - 1;
                 }
             } 
             
@@ -138,11 +136,64 @@ class Home extends Component {
     }
 
 
+
+    /**
+     * @memberof Home
+     * @description Adding new comments to post
+     */
+    addCommentClickHandler = (_id, _index) => {
+
+        const _commentField = document.getElementById('addcomment'+_id);
+        const _commentValue = _commentField.value;
+
+        if (_commentValue === '') {
+            return;
+        } else {
+            let _userPosts = JSON.parse(JSON.stringify(this.state.userPosts));
+            let _filteredPosts = JSON.parse(JSON.stringify(this.state.filteredUserPosts));
+
+            // Updating main array
+            let _updatedPosts =  _userPosts.map((post,index) => {
+                if(post.id === _id){
+                    post.comments['data'] = post.comments['data'] || [];
+                    post.comments['data'].push({
+                        id: (post.comments['data'].length + 1) ,
+                        comment_by: this.state.username,
+                        comment_value: _commentValue
+                    });
+
+                }
+                return post;
+            });
+            
+            // Updating filtered array
+            if(_filteredPosts !== null && _filteredPosts.length > 0) {
+                _filteredPosts[_index].comments['data'] = _filteredPosts[_index].comments['data'] || [];
+                _filteredPosts[_index].comments['data'].push({
+                        id: (_filteredPosts[_index].comments['data'].length + 1) ,
+                        comment_by: this.state.username,
+                        comment_value: _commentValue
+                });
+            } 
+            
+            // setting updated arrays to state
+            this.setState({
+                userPosts: [..._updatedPosts],
+                filteredUserPosts: [..._filteredPosts]
+            });
+
+            // Reset field value
+            document.getElementById('addcomment'+_id).value = '';
+
+        }
+    }
+
+
     render(){
         return(
             <div>
                 <Header profileIcon={true} profilePicture={this.state.profile_picture} profileUserName={this.state.username} searchChangeHandler={this.applyFilter}/>
-                <Container fixed style={{ 'margin':16}}>
+                <Container fixed style={{ 'marginLeft':110, 'marginTop': 20}}>
                     <Grid container spacing={2}>                
                         {(this.state.filteredUserPosts || []).map((post, index) => (
                             <Grid item xs={12} sm={6} key={post.id}>
@@ -155,56 +206,73 @@ class Home extends Component {
                                         </Avatar>
                                         }
                                         title={post.user.username}
-                                        subheader= {this.getYear(post.created_time)}
-                                        // subheader={post.created_time.toLocaleDateString()}
+                                        subheader={moment.unix(post.created_time).format("DD/MM/YYYY HH:mm:ss")}
                                     />
                                     <CardMedia
                                         className="classes.media"
-                                        image={post.images.low_resolution.url}
+                                        image={post.images.standard_resolution.url}
                                         title={(post.caption.text).split('\n')[0]}
-                                        style={{ 'height': 320, 'width':'100%'}}
+                                        style={{ 'height': 320, 'width':'95%', 'margin': (0, 0, 0, 15)}}
                                     />
+                                    
                                     <CardContent>
+                                        <Divider dark="true" />    
                                         <Grid container spacing={3} justify="flex-start" alignItems="center">
                                             <Grid item >
                                                 <Typography variant="caption">
-                                                    {(post.caption.text).split('\n')[0]}
+                                                    {(post.caption.text.split('\n')[0])}
+                                                    <br />
+                                                    {(post.tags || []).map((tag, i) => {
+                                                    return <Typography key={i} variant="caption" color="primary"> #{tag}
+                                                            </Typography>
+                                                })}
                                                 </Typography>
                                             </Grid>
                                         </Grid>
-                                        <Grid container spacing={3} justify="flex-start" alignItems="center">
-                                            <Grid item >
-                                                {(post.tags || []).map((tag, i) => {
-                                                    return <Typography key={i} variant="caption" color="primary"> #{tag}</Typography>
-                                                })}
-                                            </Grid>
-                                        </Grid>
-
                                         <Grid container spacing={1} justify="flex-start" alignItems="center">
-                                            <Grid item className="comments-min-height">
-                                                {(post.comments.data || []).map((comment, i) => {
-                                                    return <Typography key={comment.id} variant="caption" display="block">
-                                                        <strong>{comment.comment_by} :</strong> {comment.comment_value}
-                                                    </Typography>
+                                            <Grid item>
+                                                
+                                            {post.user_has_liked ? 
+                                                    <FavoriteBorder className={'greyColor'} 
+                                                                    onClick={this.likesClickHandler.bind(this, post.id, index)} 
+                                                    />
+                                                    :
+                                                    <Favorite className={'redColor'} 
+                                                              onClick={this.likesClickHandler.bind(this, post.id, index)} 
+                                                    />                                                                                                       
+                                                }
+                                            </Grid>
+                                            <Grid item >
+                                                <Typography variant="caption">
+                                                    {(post.likes.count)} likes
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>                                        
+                                        <Grid container spacing={1} justify="flex-start" alignItems="center">
+                                          <Grid item className="comments-min-height">
+                                            {(post.comments.data || []).map((comment, i) => {
+                                          return <Typography key={comment.id} variant="caption" display="block">
+                                                    <strong>{comment.comment_by} :</strong> {comment.comment_value}
+                                                        </Typography>
                                                 })}
+                                            </Grid>
+                                        </Grid>                                                    
+                                        <Grid container spacing={2} justify="flex-start" alignItems="center">
+                                            <Grid item className="flex-grow-1">
+                                                <FormControl className="formControl">
+                                                    <InputLabel htmlFor="addcomment">Add a comment </InputLabel>
+                                                    <Input id={"addcomment"+ post.id } type="text" />
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item >
+                                                <Button variant="contained" color="primary" onClick={this.addCommentClickHandler.bind(this, post.id, index)}>
+                                                    ADD
+                                                </Button>
                                             </Grid>
                                         </Grid>
 
-                                                    
                                     </CardContent>
-                                    <CardActions disableSpacing>
-                                            <Grid container spacing={1} justify="flex-start" alignItems="center">
-                                                <Grid item >
-                                                    <Favorite className={post.user_has_liked ? 'redColor' : 'greyColor'} onClick={this.likesClickHandler.bind(this, post.id, index)} />
-                                                </Grid>
-                                                <Grid item >
-                                                    <Typography variant="caption">
-                                                        {(post.likes.count)} likes
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        
-                                    </CardActions>
+                                    
                                 </Card>
                             </Grid>
                             ))}

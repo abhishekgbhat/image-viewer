@@ -17,9 +17,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import CardMedia from '@material-ui/core/CardMedia';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
-import FavoriteIconFill from '@material-ui/icons/Favorite';
+//import IconButton from '@material-ui/core/IconButton';
+//import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
+//import FavoriteIconFill from '@material-ui/icons/Favorite';
 
 
 const styles = {
@@ -225,8 +225,9 @@ class Profile extends Component {
                                 </Button>
                             </div>
                         </Modal>
+                    
                     </span>
-                </div>
+                    </div>
                 <div className="media-posts-grid">
                     {this.state.mediaData != null &&
                         <GridList cellHeight={'auto'} cols={3} style={{ padding: "40px" }}>
@@ -242,6 +243,7 @@ class Profile extends Component {
                                 </GridListTile>
                             ))}
                         </GridList>}
+                
                     {this.state.currentItem != null &&
                         <Modal
                             aria-labelledby="image-modal"
