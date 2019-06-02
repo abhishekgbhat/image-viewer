@@ -14,12 +14,12 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import CardMedia from '@material-ui/core/CardMedia';
+//import CardMedia from '@material-ui/core/CardMedia';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
-import FavoriteIconFill from '@material-ui/icons/Favorite';
+//import IconButton from '@material-ui/core/IconButton';
+//import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
+//import FavoriteIconFill from '@material-ui/icons/Favorite';
 
 
 const styles = {
@@ -192,8 +192,24 @@ class Profile extends Component {
                                 </Button>
                             </div>
                         </Modal>
+                    
                     </span>
+                    </div>
+                <div className="root">
+                    <GridList cellHeight={240} className="gridList" cols={3}>
+                            {
+                                (this.state.mediaData || []).map((mediaData, index) => (
+                                    <GridListTile key={mediaData.id} cols={mediaData.cols || 1}>
+                                    <img src={mediaData.images.low_resolution.url} alt={(mediaData.caption.text).split('\n')[0]} />
+                                </GridListTile>
+                                ))
+                            }
+                
+                    </GridList>
                 </div>
+                
+                
+            
             </div>
         )
     }
