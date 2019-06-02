@@ -17,9 +17,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import CardMedia from '@material-ui/core/CardMedia';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-//import IconButton from '@material-ui/core/IconButton';
-//import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
-//import FavoriteIconFill from '@material-ui/icons/Favorite';
+import IconButton from '@material-ui/core/IconButton';
+import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
+import FavoriteIconFill from '@material-ui/icons/Favorite';
 
 
 const styles = {
@@ -50,7 +50,9 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: "10px"
+        padding: "10px",
+        bottom: 'auto',
+        right:'auto'
     }
 
 };
@@ -172,6 +174,54 @@ class Profile extends Component {
         this.setState({ imageModalOpen: false });
     }
 
+    likeClickHandler = (id) => {
+        console.log('like id', id);
+        var foundItem = this.state.currentItem;
+
+        if (typeof foundItem !== undefined) {
+            if (!this.state.likeSet.has(id)) {
+                foundItem.likes.count++;
+                this.setState(({ likeSet }) => ({
+                    likeSet: new Set(likeSet.add(id))
+                }))
+            } else {
+                foundItem.likes.count--;
+                this.setState(({ likeSet }) => {
+                    const newLike = new Set(likeSet);
+                    newLike.delete(id);
+
+                    return {
+                        likeSet: newLike
+                    };
+                });
+            }
+        }
+    }
+
+    onAddCommentClicked = (id) => {
+        console.log('id', id);
+        if (this.state.currentComment === "" || typeof this.state.currentComment === undefined) {
+            return;
+        }
+
+        let commentList = this.state.comments.hasOwnProperty(id) ?
+            this.state.comments[id].concat(this.state.currentComment) : [].concat(this.state.currentComment);
+
+        this.setState({
+            comments: {
+                ...this.state.comments,
+                [id]: commentList
+            },
+            currentComment: ''
+        })
+    }
+
+    commentChangeHandler = (e) => {
+        this.setState({
+            currentComment: e.target.value
+        });
+    }
+
     render() {
 
         let hashTags = []
@@ -264,8 +314,7 @@ class Profile extends Component {
                                         {this.state.userName}
                                     </Typography>                                                                        
                                 </div> 
-                            </div>
-                            <div style={{ display: 'flex', height: '100%', flexDirection: 'column', justifyContent: 'space-between' }}>
+                                <div style={{ display: 'flex', height: '100%', flexDirection: 'column', justifyContent: 'space-between' }}>
                                 <div>
                                     <Typography component="p">
                                         {this.state.currentItem.caption.text}
@@ -273,20 +322,47 @@ class Profile extends Component {
                                     <Typography style={{ color: '#4dabf5' }} component="p" >
                                         {hashTags.join(' ')}
                                     </Typography>
+                                    <br />    
                                     {this.state.comments.hasOwnProperty(this.state.currentItem.id) && this.state.comments[this.state.currentItem.id].map((comment, index) => {
-                                        return (
-                                            <div key={index} className="row">
-                                                <Typography component="p" style={{ fontWeight: 'bold' }}>
-                                                    {sessionStorage.getItem('userName')}:
-                                  </Typography>
-                                                <Typography component="p" >
-                                                    {comment}
-                                                </Typography>
-                                            </div>
-                                        )
+                                            return (
+                                                <div key={index} className="row">
+                                                    <Typography component="p" style={{ fontWeight: 'bold' }}>
+                                                        {this.state.userName}:
+                                                    </Typography>
+                                                    <Typography component="p" >
+                                                        {comment}
+                                                    </Typography>
+                                                </div>
+                                            )
                                     })}
+                                 </div>
+                                    <div>
+                                        <div className="row">
+                                            <IconButton aria-label="Add to favorites" onClick={this.likeClickHandler.bind(this, this.state.currentItem.id)}>
+                                                {this.state.likeSet.has(this.state.currentItem.id) && <FavoriteIconFill style={{ color: '#F44336' }} />}
+                                                {!this.state.likeSet.has(this.state.currentItem.id) && <FavoriteIconBorder />}
+                                            </IconButton>
+                                            <Typography component="p">
+                                                {this.state.currentItem.likes.count} Likes
+                                            </Typography>
+                                        </div>
+                                        <div className="row">
+                                            <FormControl style={{ flexGrow: 1 }}>
+                                                <InputLabel htmlFor="comment">Add Comment</InputLabel>
+                                                <Input id="comment" value={this.state.currentComment} onChange={this.commentChangeHandler} />
+                                            </FormControl>
+                                            <FormControl>
+                                                <Button onClick={this.onAddCommentClicked.bind(this, this.state.currentItem.id)}
+                                                    variant="contained" color="primary">
+                                                    ADD
+                                                </Button>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>    
+                            </div>
+                                
                         </div> 
                         </Modal>}
                 </div>
