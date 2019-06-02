@@ -27,6 +27,7 @@
     flex-direction: column;
     width: 50%;
     padding: 10px;
+    overflow:auto;
 }
 
 .image-modal-rightTop {
@@ -54,12 +55,12 @@
     overflow: hidden;
 }
 
-.comment{
+/*.comment{
     display: flex;
     overflow-y: scroll;
     height:150px;
-     flex-direction: column;
-     justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-between;
     
-}
+}*/
 
