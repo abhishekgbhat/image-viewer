@@ -28,7 +28,7 @@ class Controller extends Component {
                   path='/home'
                   component={Home} 
                   baseUrl = {this.baseUrl}
-                  />
+               />
                <PrivateRoute exact path='/profile' component={Profile} baseUrl={this.baseUrl}/> 
             </Switch>
         </div>
