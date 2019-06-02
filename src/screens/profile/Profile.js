@@ -323,18 +323,22 @@ class Profile extends Component {
                                         {hashTags.join(' ')}
                                     </Typography>
                                     <br />    
+                                    <div className="comment">
                                     {this.state.comments.hasOwnProperty(this.state.currentItem.id) && this.state.comments[this.state.currentItem.id].map((comment, index) => {
                                             return (
                                                 <div key={index} className="row">
                                                     <Typography component="p" style={{ fontWeight: 'bold' }}>
                                                         {this.state.userName}:
                                                     </Typography>
+                                            
                                                     <Typography component="p" >
                                                         {comment}
                                                     </Typography>
                                                 </div>
+                                               
                                             )
                                     })}
+                                     </div>
                                  </div>
                                     <div>
                                         <div className="row">
