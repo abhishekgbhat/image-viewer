@@ -35,7 +35,7 @@ const styles = {
 
     media: {
         height: '200px',
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '50%', // 16:9
     },
 
     userIcon:
@@ -48,11 +48,11 @@ const styles = {
     imageModal:
     {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         alignItems: 'center',
         padding: "10px",
-        bottom: 'auto',
-        right:'auto'
+       
+        
     }
 
 };
