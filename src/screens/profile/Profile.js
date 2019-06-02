@@ -195,17 +195,21 @@ class Profile extends Component {
                     
                     </span>
                     </div>
-                <div className="root">
-                    <GridList cellHeight={240} className="gridList" cols={3}>
-                            {
-                                (this.state.mediaData || []).map((mediaData, index) => (
-                                    <GridListTile key={mediaData.id} cols={mediaData.cols || 1}>
-                                    <img src={mediaData.images.low_resolution.url} alt={(mediaData.caption.text).split('\n')[0]} />
+                <div className="media-posts-grid">
+                    {this.state.mediaData != null &&
+                        <GridList cellHeight={'auto'} cols={3} style={{ padding: "40px" }}>
+                            {this.state.mediaData.map(item => (
+                                <GridListTile key={item.id}>
+                                    <CardMedia
+                                        id={item.id}
+                                        style={styles.media}
+                                        image={item.images.standard_resolution.url}
+                                        title={item.caption.text}
+                                        onClick={this.handleOpenImageModal}
+                                    />
                                 </GridListTile>
-                                ))
-                            }
-                
-                    </GridList>
+                            ))}
+                        </GridList>}
                 </div>
                 
                 
