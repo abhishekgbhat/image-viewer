@@ -8,7 +8,34 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: center
+    align-items: center;
+}
+
+.image-posts-information{
+   display: flex;
+   flex-direction: row;
+   background-color: #fff;
+   width: 70%; 
+   height: 70%;
+}
+
+.image-modal-right {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding: 10px;
+}
+
+.image-modal-rightTop {
+   border-bottom: 2px solid #f2f2f2;
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+   align-items: center;
+}
+.image-modal-left {
+    width: 50%;
+    padding: 10px;
 }
 
 .gridList{

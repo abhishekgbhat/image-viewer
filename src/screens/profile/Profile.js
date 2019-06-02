@@ -32,16 +32,27 @@ const styles = {
         boxShadow: "2px 2px #888888",
         padding: "20px"
     },
+
     media: {
         height: '200px',
         paddingTop: '56.25%', // 16:9
     },
-    imageModal: {
-        backgroundColor: "#fff",
-        margin: "0 auto",
-        boxShadow: "2px 2px #888888",
-        padding: "10px",
+
+    userIcon:
+    {
+        width: "50px",
+        height: "50px",
+        margin: "20px"
+    },
+
+    imageModal:
+    {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: "10px"
     }
+
 };
 
 
@@ -78,6 +89,7 @@ class Profile extends Component {
         this.getMediaData();
     }
 
+    //User Info API data fetch
     getUserInfo = () => {
 
         let url = `${constants.userInfoUrl}/?access_token=${sessionStorage.getItem('access-token')}`;
@@ -99,6 +111,7 @@ class Profile extends Component {
         });
     }
 
+    //Media posts data fetch
     getMediaData = () => {
 
         let url = `${constants.userMediaUrl}/?access_token=${sessionStorage.getItem('access-token')}`;
@@ -115,6 +128,7 @@ class Profile extends Component {
         });
     }
 
+    //Information-section modal handlers
     handleOpenEditModal = () => {
         this.setState({ editOpen: true });
     }
@@ -145,10 +159,29 @@ class Profile extends Component {
         this.handleCloseEditModal()
     }
 
+    //Image-posts modal handlers
+    handleOpenImageModal = (event) => {
+        var result = this.state.mediaData.find(item => {
+            return item.id === event.target.id
+        })
+        console.log(result);
+        this.setState({ imageModalOpen: true, currentItem: result });
+    }
+
+    handleCloseImageModal = () => {
+        this.setState({ imageModalOpen: false });
+    }
 
     render() {
 
-        
+        let hashTags = []
+        if (this.state.currentItem !== null) {
+            hashTags = this.state.currentItem.tags.map(hash => {
+                return "#" + hash;
+            });
+            console.log('state', this.state);
+        }
+
         return (
             <div className="main-container">
                 <Header profileIcon={true} profilePicture={this.state.profilePicture} />
@@ -156,7 +189,7 @@ class Profile extends Component {
                     <Avatar
                         alt="User Image"
                         src={this.state.profilePicture}
-                        style={{ width: "50px", height: "50px" ,margin:"20px"}}
+                        style={styles.userIcon}
                     />
                     <span style={{ marginLeft: "20px" }}>
                         <div style={{ width: "600px", fontSize: "big" }}> {this.state.userName} <br /> <br />
@@ -193,6 +226,67 @@ class Profile extends Component {
                             </div>
                         </Modal>
                     </span>
+                </div>
+                <div className="media-posts-grid">
+                    {this.state.mediaData != null &&
+                        <GridList cellHeight={'auto'} cols={3} style={{ padding: "40px" }}>
+                            {this.state.mediaData.map(item => (
+                                <GridListTile key={item.id}>
+                                    <CardMedia
+                                        id={item.id}
+                                        style={styles.media}
+                                        image={item.images.standard_resolution.url}
+                                        title={item.caption.text}
+                                        onClick={this.handleOpenImageModal}
+                                    />
+                                </GridListTile>
+                            ))}
+                        </GridList>}
+                    {this.state.currentItem != null &&
+                        <Modal
+                            aria-labelledby="image-modal"
+                            aria-describedby="modal to show image details"
+                            open={this.state.imageModalOpen}
+                            onClose={this.handleCloseImageModal}
+                            style={styles.imageModal}>
+                        <div className="image-posts-information" >
+                            <div className="image-modal-left">
+                                <img style={{ height: '100%', width: '100%' }}
+                                    src={this.state.currentItem.images.standard_resolution.url}
+                                    alt={this.state.currentItem.caption.text} />
+                            </div>
+                            <div className="image-modal-right">
+                                <div className="image-modal-rightTop">
+                                    <Avatar alt="User Image" src={this.state.profilePicture} style={styles.userIcon} />
+                                    <Typography component="p">
+                                        {this.state.userName}
+                                    </Typography>                                                                        
+                                </div> 
+                            </div>
+                            <div style={{ display: 'flex', height: '100%', flexDirection: 'column', justifyContent: 'space-between' }}>
+                                <div>
+                                    <Typography component="p">
+                                        {this.state.currentItem.caption.text}
+                                    </Typography>
+                                    <Typography style={{ color: '#4dabf5' }} component="p" >
+                                        {hashTags.join(' ')}
+                                    </Typography>
+                                    {this.state.comments.hasOwnProperty(this.state.currentItem.id) && this.state.comments[this.state.currentItem.id].map((comment, index) => {
+                                        return (
+                                            <div key={index} className="row">
+                                                <Typography component="p" style={{ fontWeight: 'bold' }}>
+                                                    {sessionStorage.getItem('userName')}:
+                                  </Typography>
+                                                <Typography component="p" >
+                                                    {comment}
+                                                </Typography>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>    
+                        </div> 
+                        </Modal>}
                 </div>
             </div>
         )
