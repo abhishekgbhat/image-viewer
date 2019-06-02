@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-//import { constants } from '../../common/utils';
-import { withStyles } from '@material-ui/core/styles';
+
+import { constants } from '../../common/utils';
+import Header from '../../common/header/Header';
+import './Profile.css';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Fab from '@material-ui/core/Fab';
 import Modal from '@material-ui/core/Modal';
@@ -18,8 +20,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
 import FavoriteIconFill from '@material-ui/icons/Favorite';
-import Header from '../../common/header/Header';
-import './Profile.css';
+
 
 const styles = {
     paper: {
@@ -44,9 +45,6 @@ const styles = {
 };
 
 
-const USERS_API = 'https://api.instagram.com/v1/users/self/?access_token=';
-const USER_MEDIA_API = 'https://api.instagram.com/v1/users/self/media/recent?access_token=';
-
 
 class Profile extends Component {
 
@@ -61,8 +59,8 @@ class Profile extends Component {
             posts: 0,
             follows: 0,
             followed_by: 0,
-            //access_token: sessionStorage.getItem('access-token'),
-            accessToken: '8661035776.d0fcd39.39f63ab2f88d4f9c92b0862729ee2784',
+            access_token: sessionStorage.getItem('access-token'),
+            //accessToken: '8661035776.d0fcd39.39f63ab2f88d4f9c92b0862729ee2784',
             editOpen: false,
             fullNameRequired: 'dispNone',
             newFullName: '',
@@ -82,24 +80,39 @@ class Profile extends Component {
 
     getUserInfo = () => {
 
-        fetch(USERS_API + this.state.accessToken)
-            .then(response => response.json())
-            .then(jsonResponse => this.setState({
+        let url = `${constants.userInfoUrl}/?access_token=${sessionStorage.getItem('access-token')}`;
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+            return response.json();
+        }).then((jsonResponse) => {
+            this.setState({
                 userName: jsonResponse.data.username,
                 fullName: jsonResponse.data.full_name,
                 profilePicture: jsonResponse.data.profile_picture,
                 posts: jsonResponse.data.counts.media,
                 follows: jsonResponse.data.counts.follows,
                 followed_by: jsonResponse.data.counts.followed_by
-            }));
+            });
+        }).catch((error) => {
+            console.log('error user data', error);
+        });
     }
 
     getMediaData = () => {
 
-        fetch(USER_MEDIA_API + this.state.accessToken)
-            .then(response => response.json())
-            .then(jsonResponse => this.setState({
-            }));
+        let url = `${constants.userMediaUrl}/?access_token=${sessionStorage.getItem('access-token')}`;
+        return fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+            return response.json();
+        }).then((jsonResponse) => {
+            this.setState({
+                mediaData: jsonResponse.data
+            });
+        }).catch((error) => {
+            console.log('error media data', error);
+        });
     }
 
     handleOpenEditModal = () => {
